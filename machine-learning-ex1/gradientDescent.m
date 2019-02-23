@@ -17,13 +17,12 @@ for iter = 1:num_iters
     %       of the cost function (computeCost) and gradient here.
     %
 
-    %new_theta = zeros(length(theta), 1);
-
     % Vectorization the loops over the traning examples and theta arguments
     h = (theta' * X')';
     sums = ones(1, m) * ((h - y) .* X);
     theta = theta .- ((alpha / m) * sums');
 
+    %new_theta = zeros(length(theta), 1);
     %for j = 1:length(theta)
     %    % Vectorization the loop over the traning examples
     %    h = (theta' * X')';
