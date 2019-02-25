@@ -20,7 +20,9 @@ for iter = 1:num_iters
 
 
 
-
+    h = (theta' * X')';
+    sums = ones(1, m) * ((h - y) .* X);
+    theta = theta .- ((alpha / m) * sums');
 
 
 
