@@ -18,8 +18,13 @@ grad = zeros(size(theta));
 %               derivatives of the cost w.r.t. each parameter in theta
 
 
+sum = ones(1, m) * (((-y) .* log(sigmoid(theta' * X'))') .- ((1 .- y) .* log(1 .- sigmoid(theta' * X'))'));
+regularizetion = (lambda / (2 * m)) .* (ones(1, size(theta, 1) - 1) * (theta(2:size(theta, 1)) .^ 2));
+J = (sum ./ m) + regularizetion;
 
+grad(1) = ((ones(1, m) * ((sigmoid(theta' * X')' .- y) .* X(:, 1))) ./ m)';
 
+grad(2:size(grad)) = (((ones(1, m) * ((sigmoid(theta' * X')' .- y) .* X(:, 2:size(grad)))) ./ m)') .+ ((lambda / m) .* theta(2:size(theta, 1)));
 
 
 % =============================================================
