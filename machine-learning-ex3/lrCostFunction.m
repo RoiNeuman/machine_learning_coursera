@@ -38,9 +38,13 @@ grad = zeros(size(theta));
 
 
 
+sums = sum(((-y) .* log(sigmoid(X * theta))) .- ((1 .- y) .* log(1 .- sigmoid(X * theta))));
+regularizetion = (lambda / (2 * m)) .* sum(theta(2:end) .^ 2);
+J = (sums ./ m) + regularizetion;
 
+grad(1) = (sum((sigmoid(X * theta) .- y) .* X(:, 1)) ./ m)';
 
-
+grad(2:end) = ((sum((sigmoid(X * theta) .- y) .* X(:, 2:end)) ./ m)') .+ ((lambda / m) .* theta(2:end));
 
 
 
