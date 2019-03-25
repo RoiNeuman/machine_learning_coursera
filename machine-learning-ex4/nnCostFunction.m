@@ -62,22 +62,44 @@ Theta2_grad = zeros(size(Theta2));
 %               and Theta2_grad from Part 2.
 %
 
+h = sigmoid(Theta2 * [ones(1, m); sigmoid(Theta1 * [ones(1, m); X'])]); % size = k x m
 
+y_binary = y == ([1:num_labels] .* ones(m, num_labels)); % size = m x k
 
+sums = sum(sum((y_binary' .* log(h)) + ((1 .- y_binary') .* log(1 .- h))));
 
+regularizetion = (lambda / (2 * m)) .* (sum(sum(Theta1(:, 2:end) .^ 2)) + sum(sum(Theta2(:, 2:end) .^ 2)));
 
+J = -(sums ./ m) + regularizetion;
 
+% Backpropagation
+for t = 1:m
 
+  % 1. Feedforward pass
+  a_1 = [1; X(t, :)']; % size = 401 x 1
+  z_2 = Theta1 * a_1; % size = 25 x 1 (25 x 401 * 401 x 1)
+  a_2 = [1; sigmoid(z_2)]; % size = 26 x 1
+  z_3 = Theta2 * a_2; % size = 10 x 1 (10 x 26 * 26 x 1)
+  a_3 = sigmoid(z_3); % size = 10 x 1
 
+  % 2. Error of the output layer
+  delta_3 = a_3 .- y_binary(t, :)'; % size = 10 x 1
 
+  % 3. Error of the hidden layer
+  delta_2 = (Theta2(:, 2:end)' * delta_3) .* sigmoidGradient(z_2); % size = 25 x 1 ((25 x 10 * 10 x 1) .* 25 x 1)
 
+  % 4. Accumulate the gradient (Error) of this example
+  Theta1_grad = Theta1_grad .+ (delta_2 * a_1');
+  Theta2_grad = Theta2_grad .+ (delta_3 * a_2');
 
+end
 
+% 5. Computing the weighted average
+regularize_theta1 = (lambda / m) .* [zeros(size(Theta1, 1), 1), Theta1(:, 2:end)];
+regularize_theta2 = (lambda / m) .* [zeros(size(Theta2, 1), 1), Theta2(:, 2:end)];
 
-
-
-
-
+Theta1_grad = (Theta1_grad ./ m) .+ regularize_theta1;
+Theta2_grad = (Theta2_grad ./ m) .+ regularize_theta2;
 
 
 % -------------------------------------------------------------
