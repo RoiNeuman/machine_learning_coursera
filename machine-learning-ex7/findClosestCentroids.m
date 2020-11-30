@@ -22,10 +22,16 @@ idx = zeros(size(X,1), 1);
 %
 
 
-
-
-
-
+for x_index = 1:length(X)
+    min_dist = Inf;
+    for c = 1:K
+        dist = norm(X(x_index, :) - centroids(c, :)) ^ 2;
+        if dist < min_dist
+            min_dist = dist;
+            idx(x_index) = c;
+        end
+    end
+end
 
 % =============================================================
 
